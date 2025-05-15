@@ -982,34 +982,33 @@ export default function (view) {
       const url = `${baseUrl}#/share?itemId=${itemId}&seconds=${seconds}`;
       // url 添加到剪切板
       try {
-        navigator.clipboard.writeText(url).then(() => {
-          // 显示成功提示
-          import('../../../components/toast/toast').then(({default: toast}) => {
-            toast({
-              text: '分享链接已复制到剪贴板'
-            });
-          });
-        }).catch(err => {
-          console.error('复制到剪贴板失败:', err);
-          // 显示错误提示
-          import('../../../components/toast/toast').then(({default: toast}) => {
-            toast({
-              text: '复制到剪贴板失败'
-            });
-          });
-        });
-      } catch (err) {
-        console.error('复制到剪贴板出错:', err);
-        // 显示错误提示
-        import('../../../components/toast/toast').then(({default: toast}) => {
-          toast({
-            text: '复制到剪贴板失败'
-          });
-        });
+        navigator.clipboard.writeText(url)
+        import('../../../components/toast/toast').then(({ default: toast }) => {
+          toast({ text: '分享链接已复制到剪贴板' })
+        })
+      } catch (error) {
+        _setClipboardData(url)
       }
       
       console.log("shareData", shareData);
       console.log("share url", url);
+    }
+
+    function _setClipboardData(data) {
+      const pasteText = document.getElementById('#clipboard')
+      pasteText && pasteText.remove()
+      const textarea = document.createElement('textarea')
+      textarea.setAttribute('inputmode', 'none')
+      textarea.id = '#clipboard'
+      textarea.style.position = 'fixed'
+      textarea.style.top = '-9999px'
+      textarea.style.zIndex = '-9999'
+      document.body.appendChild(textarea)
+      textarea.value = data
+      textarea.select()
+      textarea.setSelectionRange(0, textarea.value.length)
+      const result = document.execCommand('Copy', false)
+      textarea.blur()
     }
 
     function onSettingsButtonClick() {

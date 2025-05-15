@@ -1,6 +1,7 @@
 import { appHost } from '../../components/apphost';
 import globalize from '../../lib/globalize';
 import artplayer from "./artplayer"
+import localConfig from "./local-config.json"
 
 export default function (view, params) {
   console.log("params", params)
@@ -8,8 +9,8 @@ export default function (view, params) {
   const item_id = params.itemId
   const seconds = params.seconds
 
-  const api_key = '28acc80efa3f4fdd9c54493b4641f8cc'
-  const server = 'http://localhost:8096'
+  const api_key = localConfig.api_key ? localConfig.api_key : ''
+  const server = localConfig.server ? localConfig.server : 'http://localhost:8096'
 
   view.addEventListener('viewshow', function () {
     let stream_video = `${server}/Items/${item_id}/Download?api_key=${api_key}`
